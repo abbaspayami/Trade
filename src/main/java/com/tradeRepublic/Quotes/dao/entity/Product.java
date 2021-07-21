@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Entity
@@ -22,9 +23,11 @@ public class Product {
 
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL,
-            mappedBy = "product")
-    private Price price;
+    private Date openTimestamp;
+    private String openPrice;
+    private String highPrice;
+    private String lowPrice;
+    private String closePrice;
+    private Date closeTimestamp;
 
 }

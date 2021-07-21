@@ -9,8 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer> {
-    @Transactional
-    void deleteByIsin(String isin);
-    @Transactional
     Optional<Product> findByIsin(String isin);
+    void deleteByIsin(String isin);
 }
