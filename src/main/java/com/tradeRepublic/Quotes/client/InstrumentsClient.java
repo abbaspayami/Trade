@@ -54,7 +54,7 @@ public class InstrumentsClient {
             }
         }, new WebSocketHttpHeaders(), URI.create("ws://localhost:8080/instruments")).get();
     }
-    @Transactional(Transactional.TxType.REQUIRED)
+    @Transactional
     public void analyzing(Instrument instrument) {
         if (instrument.getType().equals("DELETE")) {
             productRepository.deleteByIsin(instrument.getData().getIsin());

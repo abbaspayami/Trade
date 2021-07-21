@@ -23,20 +23,19 @@ public class ProductService {
     public List<ProductDto> getInstrumentPrice() {
         List<Product> all = (List<Product>) productRepository.findAll();
         List<ProductDto> productDtoList = new ArrayList<>();
-//        for (Product product: all) {
-//            ProductDto productDto = new ProductDto(product.getIsin(), product.getDescription(), product.getClosePrice());
-//            productDtoList.add(productDto);
-//        }
-        return productDtoList;
+        for (Product product: all) {
+            ProductDto productDto = new ProductDto(product.getIsin(), product.getDescription(), product.getClosePrice());
+            productDtoList.add(productDto);
+        }
+         return productDtoList;
     }
 
     public List<ProductDto> getInstrumentPriceHistory() {
         List<Product> all = (List<Product>) productRepository.findAll();
         Date dateBefore = new Date(System.currentTimeMillis() - 3600 * 1000);
-//        return all.stream().filter(i -> i.getOpenTimestamp()!= null && i.getOpenTimestamp().getTime() > dateBefore.getTime()).map(i ->
-//                new ProductDto(i.getIsin(), i.getDescription(), i.getOpenTimestamp(), i.getOpenPrice(), i.getHighPrice()
-//                        , i.getLowPrice(), i.getClosePrice(), i.getCloseTimestamp())).collect(Collectors.toList());
-        return null;
+        return all.stream().filter(i -> i.getOpenTimestamp()!= null && i.getOpenTimestamp().getTime() > dateBefore.getTime()).map(i ->
+                new ProductDto(i.getIsin(), i.getDescription(), i.getOpenTimestamp(), i.getOpenPrice(), i.getHighPrice()
+                        , i.getLowPrice(), i.getClosePrice(), i.getCloseTimestamp())).collect(Collectors.toList());
     }
 
 

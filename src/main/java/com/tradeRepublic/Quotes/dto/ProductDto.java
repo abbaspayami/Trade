@@ -27,9 +27,9 @@ public class ProductDto {
     private String highPrice;
     @JsonView(ProductViews.InstrumentPriceHistory.class)
     private String lowPrice;
-    @JsonView(ProductViews.InstrumentPriceHistory.class)
-    private String closePrice;
     @JsonView({ProductViews.InstrumentPrice.class,ProductViews.InstrumentPriceHistory.class})
+    private String closePrice;
+    @JsonView(ProductViews.InstrumentPriceHistory.class)
     private Date closeTimestamp;
 
 }

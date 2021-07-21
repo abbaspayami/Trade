@@ -23,4 +23,11 @@ public class Product {
 
     private String description;
 
+    private Date openTimestamp;
+    private String openPrice;
+    private String highPrice;
+    private String lowPrice;
+    private String closePrice;
+    private Date closeTimestamp;
+
 }
