@@ -1,9 +1,9 @@
 package com.tradeRepublic.Quotes.dto;
 
-public class ProductViews {
+public interface ProductViews {
 
-    public static class InstrumentPrice{}
+    public static interface InstrumentPrice{}
 
-    public static class InstrumentPriceHistory{}
+    public static interface InstrumentPriceHistory{}
 
 }

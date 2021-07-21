@@ -5,9 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tradeRepublic.Quotes.dao.entity.Product;
 import com.tradeRepublic.Quotes.dao.repository.ProductRepository;
 import com.tradeRepublic.Quotes.dto.Instrument;
-import com.tradeRepublic.Quotes.dto.Quote;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHttpHeaders;
@@ -18,7 +16,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.net.URI;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 @Slf4j
@@ -27,10 +24,11 @@ public class InstrumentsClient {
 
     private StandardWebSocketClient standardWebSocketClient;
     private WebSocketSession clientSession;
-    @Autowired
-    private  ProductRepository productRepository;
 
-    public InstrumentsClient() throws ExecutionException, InterruptedException {
+    private final ProductRepository productRepository;
+
+    public InstrumentsClient(ProductRepository productRepository) {
+        this.productRepository = productRepository;
         standardWebSocketClient = new StandardWebSocketClient();
     }
 
@@ -54,6 +52,7 @@ public class InstrumentsClient {
             }
         }, new WebSocketHttpHeaders(), URI.create("ws://localhost:8080/instruments")).get();
     }
+
     @Transactional
     public void analyzing(Instrument instrument) {
         if (instrument.getType().equals("DELETE")) {

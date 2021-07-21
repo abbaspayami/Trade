@@ -30,7 +30,7 @@ public class QuotesClient {
     @Autowired
     private ProductRepository productRepository;
 
-    public QuotesClient() throws ExecutionException, InterruptedException {
+    public QuotesClient() {
         standardWebSocketClient = new StandardWebSocketClient();
     }
 
