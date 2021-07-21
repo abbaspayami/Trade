@@ -2,7 +2,9 @@ package com.tradeRepublic.Quotes.client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tradeRepublic.Quotes.dao.entity.Price;
 import com.tradeRepublic.Quotes.dao.entity.Product;
+import com.tradeRepublic.Quotes.dao.repository.PriceRepository;
 import com.tradeRepublic.Quotes.dao.repository.ProductRepository;
 import com.tradeRepublic.Quotes.dto.Quote;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,8 @@ public class QuotesClient {
 
     private StandardWebSocketClient standardWebSocketClient;
     private WebSocketSession clientSession;
+    @Autowired
+    private PriceRepository priceRepository;
     @Autowired
     private ProductRepository productRepository;
 
@@ -57,24 +61,29 @@ public class QuotesClient {
 
     @Transactional
     public void analyzing(Quote quote) {
-        Optional<Product> possibleProduct = productRepository.findByIsin(quote.getData().getIsin());
+        Optional<Price> possibleProduct = priceRepository.findByIsin(quote.getData().getIsin());
         if (possibleProduct.isPresent()) {
-            Product product = possibleProduct.get();
-            if (product.getOpenTimestamp() == null) {
-                product.setOpenTimestamp(new Date());
-                product.setOpenPrice(quote.getData().getPrice());
-                product.setHighPrice(quote.getData().getPrice());
-                product.setLowPrice(quote.getData().getPrice());
+            Price price = possibleProduct.get();
+            if (Float.parseFloat(quote.getData().getPrice()) > Float.parseFloat(price.getHighPrice())) {
+                price.setHighPrice(quote.getData().getPrice());
             }
-            if (Float.parseFloat(quote.getData().getPrice()) > Float.parseFloat(product.getHighPrice())) {
-                product.setHighPrice(quote.getData().getPrice());
+            if (Float.parseFloat(quote.getData().getPrice()) < Float.parseFloat(price.getLowPrice())) {
+                price.setLowPrice(quote.getData().getPrice());
             }
-            if (Float.parseFloat(quote.getData().getPrice()) < Float.parseFloat(product.getLowPrice())) {
-                product.setLowPrice(quote.getData().getPrice());
-            }
-            product.setClosePrice(quote.getData().getPrice());
-            product.setCloseTimestamp(new Date());
-            productRepository.save(product);
+            price.setClosePrice(quote.getData().getPrice());
+            price.setCloseTimestamp(new Date());
+            priceRepository.save(price);
+        }
+        else {
+            Price price = new Price();
+            price.setIsin(quote.getData().getIsin());
+            price.setOpenTimestamp(new Date());
+            price.setOpenPrice(quote.getData().getPrice());
+            price.setHighPrice(quote.getData().getPrice());
+            price.setLowPrice(quote.getData().getPrice());
+            price.setClosePrice(quote.getData().getPrice());
+            price.setCloseTimestamp(new Date());
+            priceRepository.save(price);
         }
     }
 
