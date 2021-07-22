@@ -6,6 +6,10 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * this class use for showing result to client
+ * @author Abbas
+ */
 @Data
 @AllArgsConstructor
 public class ProductDto {

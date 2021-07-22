@@ -3,6 +3,11 @@ package com.tradeRepublic.Quotes.dto;
 import lombok.Data;
 import lombok.ToString;
 
+/**
+ * modeling json quote to entity for getting from websocket
+ *
+ * @author Abbas
+ */
 @Data
 @ToString
 public class Quote {

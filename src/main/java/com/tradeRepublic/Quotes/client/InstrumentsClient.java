@@ -18,6 +18,12 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * this class for reading from websocket of address ip:port/instrument
+ * for reading all instrument
+ *
+ * @author Abbas
+ */
 @Slf4j
 @Component
 public class InstrumentsClient {
@@ -29,6 +35,8 @@ public class InstrumentsClient {
     private String baseUrl;
     @Value("${gateway.instrument}")
     private String quotes;
+    @Value("DELETE")
+    private String deleteType;
 
     public InstrumentsClient(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -40,6 +48,12 @@ public class InstrumentsClient {
         start();
     }
 
+    /**
+     * for starting to read from websocket and convert to object mapper
+     *
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void start() throws ExecutionException, InterruptedException {
         standardWebSocketClient.doHandshake(new TextWebSocketHandler() {
             @Override
@@ -56,8 +70,12 @@ public class InstrumentsClient {
         }, new WebSocketHttpHeaders(), URI.create(baseUrl + quotes)).get();
     }
 
+    /**
+     * for analyzing json read and then delete or inserting into database h2
+     * @param instrument
+     */
     public void analyzing(Instrument instrument) {
-        if (instrument.getType().equals("DELETE")) {
+        if (instrument.getType().equals(deleteType)) {
             productRepository.deleteByIsin(instrument.getData().getIsin());
         }
         Product product = new Product();

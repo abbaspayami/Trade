@@ -20,6 +20,12 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
+/**
+ * this class for reading from websocket of address ip:port/quotes
+ * for reading all price of specific isin
+ *
+ * @author Abbas
+ */
 @Slf4j
 @Component
 public class QuotesClient {
@@ -42,6 +48,11 @@ public class QuotesClient {
         start();
     }
 
+    /**
+     * for starting to read from websocket and convert to object mapper
+     * @throws ExecutionException
+     * @throws InterruptedException
+     */
     public void start() throws ExecutionException, InterruptedException {
         standardWebSocketClient.doHandshake(new TextWebSocketHandler() {
             @Override
@@ -58,6 +69,10 @@ public class QuotesClient {
         }, new WebSocketHttpHeaders(), URI.create(baseUrl + quotes)).get();
     }
 
+    /**
+     * for analyzing json read and if isExist in dataBase and then insert some of prices
+     * @param quote
+     */
     public void analyzing(Quote quote) {
         Optional<Product> possibleProduct = productRepository.findByIsin(quote.getData().getIsin());
         if (possibleProduct.isPresent()) {

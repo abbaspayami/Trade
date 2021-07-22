@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Instrument controller for getting instrument price and the price history of the 30 minutes
+ * 2 endPoint /instrumentPrice and /instrumentPriceHistory
+ *
+ * @author Abbas
+ */
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
