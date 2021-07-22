@@ -6,6 +6,7 @@ import com.tradeRepublic.Quotes.dao.entity.Product;
 import com.tradeRepublic.Quotes.dao.repository.ProductRepository;
 import com.tradeRepublic.Quotes.dto.Instrument;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHttpHeaders;
@@ -14,7 +15,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.concurrent.ExecutionException;
 
@@ -22,10 +22,13 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class InstrumentsClient {
 
-    private StandardWebSocketClient standardWebSocketClient;
-    private WebSocketSession clientSession;
-
+    private final StandardWebSocketClient standardWebSocketClient;
     private final ProductRepository productRepository;
+
+    @Value("${gateway.baseurl}")
+    private String baseUrl;
+    @Value("${gateway.instrument}")
+    private String quotes;
 
     public InstrumentsClient(ProductRepository productRepository) {
         this.productRepository = productRepository;
@@ -38,7 +41,7 @@ public class InstrumentsClient {
     }
 
     public void start() throws ExecutionException, InterruptedException {
-        this.clientSession = standardWebSocketClient.doHandshake(new TextWebSocketHandler() {
+        standardWebSocketClient.doHandshake(new TextWebSocketHandler() {
             @Override
             protected void handleTextMessage(WebSocketSession session, TextMessage message) {
                 try {
@@ -50,10 +53,9 @@ public class InstrumentsClient {
                     e.printStackTrace();
                 }
             }
-        }, new WebSocketHttpHeaders(), URI.create("ws://localhost:8080/instruments")).get();
+        }, new WebSocketHttpHeaders(), URI.create(baseUrl + quotes)).get();
     }
 
-    @Transactional
     public void analyzing(Instrument instrument) {
         if (instrument.getType().equals("DELETE")) {
             productRepository.deleteByIsin(instrument.getData().getIsin());

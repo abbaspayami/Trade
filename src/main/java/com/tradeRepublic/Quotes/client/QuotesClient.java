@@ -6,7 +6,7 @@ import com.tradeRepublic.Quotes.dao.entity.Product;
 import com.tradeRepublic.Quotes.dao.repository.ProductRepository;
 import com.tradeRepublic.Quotes.dto.Quote;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketHttpHeaders;
@@ -15,7 +15,6 @@ import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.PostConstruct;
-import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Date;
 import java.util.Optional;
@@ -25,12 +24,16 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class QuotesClient {
 
-    private StandardWebSocketClient standardWebSocketClient;
-    private WebSocketSession clientSession;
-    @Autowired
-    private ProductRepository productRepository;
+    private final StandardWebSocketClient standardWebSocketClient;
+    private final ProductRepository productRepository;
 
-    public QuotesClient() {
+    @Value("${gateway.baseurl}")
+    private String baseUrl;
+    @Value("${gateway.quotes}")
+    private String quotes;
+
+    public QuotesClient(ProductRepository productRepository) {
+        this.productRepository = productRepository;
         standardWebSocketClient = new StandardWebSocketClient();
     }
 
@@ -40,7 +43,7 @@ public class QuotesClient {
     }
 
     public void start() throws ExecutionException, InterruptedException {
-        this.clientSession = standardWebSocketClient.doHandshake(new TextWebSocketHandler() {
+        standardWebSocketClient.doHandshake(new TextWebSocketHandler() {
             @Override
             protected void handleTextMessage(WebSocketSession session, TextMessage message) {
                 try {
@@ -52,10 +55,9 @@ public class QuotesClient {
                     e.printStackTrace();
                 }
             }
-        }, new WebSocketHttpHeaders(), URI.create("ws://localhost:8080/quotes")).get();
+        }, new WebSocketHttpHeaders(), URI.create(baseUrl + quotes)).get();
     }
 
-    @Transactional
     public void analyzing(Quote quote) {
         Optional<Product> possibleProduct = productRepository.findByIsin(quote.getData().getIsin());
         if (possibleProduct.isPresent()) {

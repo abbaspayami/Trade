@@ -18,9 +18,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
-
     private String isin;
-
     private String description;
 
     private Date openTimestamp;
