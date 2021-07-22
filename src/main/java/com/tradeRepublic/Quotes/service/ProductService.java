@@ -40,7 +40,7 @@ public class ProductService {
 
     public List<ProductDto> getInstrumentPriceHistory() {
         List<Product> all = (List<Product>) productRepository.findAll();
-        Date dateBefore = new Date(System.currentTimeMillis() - 60 * 30);
+        Date dateBefore = new Date(System.currentTimeMillis() - 50 * 10 * 3600);
         return all.stream().filter(i -> i.getOpenTimestamp()!= null && i.getOpenTimestamp().getTime() > dateBefore.getTime()).map(i ->
                 new ProductDto(i.getIsin(), i.getDescription(), i.getOpenTimestamp(), i.getOpenPrice(), i.getHighPrice()
                         , i.getLowPrice(), i.getClosePrice(), i.getCloseTimestamp())).collect(Collectors.toList());

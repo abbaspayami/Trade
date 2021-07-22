@@ -25,8 +25,19 @@ public class InstrumentIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
-    void status_GetProduct_Test() throws Exception {
+    void status_GetInstrumentPrice_Test() throws Exception {
         MvcResult mvcResult = mockMvc.perform(get(TestUtils.BASE_URL + TestUtils.INSTRUMENT_PRICE)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertNotNull(mvcResult);
+        assertNotNull(mvcResult.getResponse().getContentAsString());
+    }
+
+    @Test
+    void status_GetInstrumentPriceHistory_Test() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get(TestUtils.BASE_URL + TestUtils.INSTRUMENT_PRICE_HISTORY)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
