@@ -11,7 +11,6 @@ import java.util.Date;
  * @author Abbas
  */
 @Data
-@AllArgsConstructor
 public class ProductDto {
 
     public ProductDto(String isin, String description, String closePrice) {
@@ -19,9 +18,19 @@ public class ProductDto {
         this.description = description;
         this.closePrice = closePrice;
     }
-    @JsonView({ProductViews.InstrumentPrice.class,ProductViews.InstrumentPriceHistory.class})
+
+    public ProductDto(Date openTimestamp, String openPrice, String highPrice, String lowPrice, String closePrice, Date closeTimestamp) {
+        this.openTimestamp = openTimestamp;
+        this.openPrice = openPrice;
+        this.highPrice = highPrice;
+        this.lowPrice = lowPrice;
+        this.closePrice = closePrice;
+        this.closeTimestamp = closeTimestamp;
+    }
+
+    @JsonView(ProductViews.InstrumentPrice.class)
     private String isin;
-    @JsonView({ProductViews.InstrumentPrice.class,ProductViews.InstrumentPriceHistory.class})
+    @JsonView(ProductViews.InstrumentPrice.class)
     private String description;
     @JsonView(ProductViews.InstrumentPriceHistory.class)
     private Date openTimestamp;

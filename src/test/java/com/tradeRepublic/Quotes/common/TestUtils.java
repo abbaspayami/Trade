@@ -7,7 +7,7 @@ import java.util.Date;
 public class TestUtils {
 
     public static final int EXISTING_PRODUCT_ID = 1;
-    public static final int NON_EXISTING_PRODUCT_ID = 2;
+    public static final String EXISTING_PRODUCT_ISIN = "BW5235653587";
 
     public static final String BASE_URL = "http://localhost:8080/api";
     public static final String INSTRUMENT_PRICE = "/instrumentPrice";

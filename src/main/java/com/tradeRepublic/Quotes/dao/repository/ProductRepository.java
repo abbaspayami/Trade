@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+/**
+ * Data Layer, CRUD actions to access the product data
+ *
+ * @author Abbas
+ */
 @Repository
 public interface ProductRepository extends CrudRepository<Product, Integer> {
     Optional<Product> findByIsin(String isin);

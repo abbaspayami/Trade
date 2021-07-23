@@ -7,7 +7,11 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
-
+/**
+ * To store a product data in database
+ *
+ * @author Abbas
+ */
 @Entity
 @Table(name = "product")
 @Getter

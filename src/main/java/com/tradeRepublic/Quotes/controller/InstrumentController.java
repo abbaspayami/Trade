@@ -7,9 +7,7 @@ import com.tradeRepublic.Quotes.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,10 +41,10 @@ public class InstrumentController {
      *
      * @return List ProductDto Object
      */
-    @GetMapping(value = "/instrumentPriceHistory")
+    @GetMapping(value = "/instrumentPriceHistory/{isin}")
     @JsonView(ProductViews.InstrumentPriceHistory.class)
-    public ResponseEntity<List<ProductDto>> getInstrumentPriceHistory() {
-        return new ResponseEntity<>(productService.getInstrumentPriceHistory(), HttpStatus.OK);
+    public ResponseEntity<ProductDto> getInstrumentPriceHistory(@PathVariable String isin) {
+        return new ResponseEntity<>(productService.getInstrumentPriceHistory(isin), HttpStatus.OK);
     }
 
 }
